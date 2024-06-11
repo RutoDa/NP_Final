@@ -22,7 +22,7 @@ MULTICAST_GROUP = '224.1.1.1'
 SERVER_ADDRESS = (SERVER_IP, 7777)
 CLASSROOM_INFO = dict()
 
-
+#負責傳遞螢幕畫面的thread
 class ScreenshotThread(QThread):
     def run(self):
         global CLASSROOM_INFO
@@ -42,7 +42,7 @@ class ScreenshotThread(QThread):
             self.sock.sendto(message, server_address)
         self.sock.close()
 
-
+#負責傳遞視訊鏡頭的thread
 class CameraThread(QThread):
     def run(self):
         global CLASSROOM_INFO
@@ -61,7 +61,7 @@ class CameraThread(QThread):
             self.sock.sendto(message, server_address)
         self.sock.close()
 
-
+#負責傳遞音訊的thread
 class AudioThread(QThread):
     def run(self):
         global CLASSROOM_INFO
@@ -87,7 +87,7 @@ class AudioThread(QThread):
         audio.terminate()
         self.sock.close()
 
-
+#負責請求上線名單的thread
 class RequestStudentListThread(QThread):
     change_student_list_signal = pyqtSignal(dict)
 
@@ -110,7 +110,7 @@ class RequestStudentListThread(QThread):
             CLASSROOM_INFO['students'] = student_list
             self.change_student_list_signal.emit(student_list)
 
-
+#負責處理訊息接收的thread
 class RecvMsgThread(QThread):
     update_chatroom_signal = pyqtSignal(dict)
 
@@ -133,7 +133,7 @@ class RecvMsgThread(QThread):
 
         self.sock.close()
 
-
+#透過輸入老師名字以及課程名稱來建立教室
 class CreateRoomWindow(QWidget):
     def __init__(self):
         super().__init__()
@@ -167,7 +167,7 @@ class CreateRoomWindow(QWidget):
         self.teacher_window = TeacherWindow()
         self.teacher_window.show()
 
-
+#控制UI畫面的顯示以及各元件的事件處理(傳送訊息、更新上線名單、更新聊天室內容等...)
 class TeacherWindow(QWidget):
     def __init__(self):
         super().__init__()
@@ -264,13 +264,6 @@ class TeacherWindow(QWidget):
                         f"<font color='#666666'><b>上線時間: {time.strftime('%Y-%m-%d %H:%M:%S', join_time)}</b></font>")
         msg_box.setStyleSheet(MSG_BOX_STYLE)
         msg_box.exec_()
-        # QMessageBox.information(self, f"{student_id}-學生資訊",
-        #                         f'<font color="#666666"><b>學號:</b> {student_id}</font><br>'
-        #                         f'<font color="#666666"><b>姓名:</b> {name}</font><br>'
-        #                         f"<font color='#666666'><b>上線時間:</b> {time.strftime('%Y-%m-%d %H:%M:%S', join_time)}</font>")
-
-    # def update_image(self, qt_image):
-    #     self.screenshot.setPixmap(QPixmap.fromImage(qt_image))
 
 
 if __name__ == "__main__":

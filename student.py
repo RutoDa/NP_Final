@@ -21,7 +21,7 @@ MULTICAST_GROUP = '224.1.1.1'
 CLASSROOM_INFO = dict()
 SERVER_ADDRESS = (SERVER_IP, 7777)
 
-
+#負責接收螢幕畫面的thread
 class ScreenshotReceiveThread(QThread):
     change_pixmap_signal = pyqtSignal(QImage)
 
@@ -50,7 +50,7 @@ class ScreenshotReceiveThread(QThread):
 
         self.sock.close()
         #conn.close()
-
+#負責接收視訊鏡頭的thread
 class CameraReceiveThread(QThread):
     change_pixmap_signal = pyqtSignal(QImage)
 
@@ -81,7 +81,7 @@ class CameraReceiveThread(QThread):
 
         self.sock.close()
         #conn.close()
-
+#負責接收音訊的thread
 class AudioReceiveThread(QThread):
     def run(self):
         CHUNK = 1024
@@ -112,7 +112,7 @@ class AudioReceiveThread(QThread):
         stream.close()
         audio.terminate()
 
-
+#負責請求上線名單的thread
 class RequestStudentListThread(QThread):
     change_student_list_signal = pyqtSignal(dict)
     def run(self):
@@ -132,7 +132,7 @@ class RequestStudentListThread(QThread):
             print(student_list)
             self.change_student_list_signal.emit(student_list)
 
-
+#負責處理訊息接收的thread
 class RecvMsgThread(QThread):
     update_chatroom_signal = pyqtSignal(dict)
     def run(self):
@@ -154,7 +154,7 @@ class RecvMsgThread(QThread):
 
         self.sock.close()
 
-
+#透過輸入教室編號、學生姓名和學號來建立教室
 class JoinRoomWindow(QWidget):
     def __init__(self):
         super().__init__()
@@ -205,7 +205,7 @@ class JoinRoomWindow(QWidget):
 
 
 
-
+#控制UI畫面的顯示以及各元件的事件處理(傳送訊息、更新上線名單、更新聊天室內容等...)
 class StudentWindow(QWidget):
     def __init__(self):
         super().__init__()
