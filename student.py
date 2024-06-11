@@ -21,7 +21,8 @@ MULTICAST_GROUP = '224.1.1.1'
 CLASSROOM_INFO = dict()
 SERVER_ADDRESS = (SERVER_IP, 7777)
 
-#負責接收螢幕畫面的thread
+
+# 負責接收螢幕畫面的thread
 class ScreenshotReceiveThread(QThread):
     change_pixmap_signal = pyqtSignal(QImage)
 
@@ -47,15 +48,14 @@ class ScreenshotReceiveThread(QThread):
             bytes_per_line = ch * w
             qt_image = QImage(rgb_image.data, w, h, bytes_per_line, QImage.Format_RGB888)
             self.change_pixmap_signal.emit(qt_image)
-
         self.sock.close()
-        #conn.close()
-#負責接收視訊鏡頭的thread
+
+
+# 負責接收視訊鏡頭的thread
 class CameraReceiveThread(QThread):
     change_pixmap_signal = pyqtSignal(QImage)
 
     def run(self):
-
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, BUFF_SIZE)
@@ -65,7 +65,6 @@ class CameraReceiveThread(QThread):
         group = socket.inet_aton(MULTICAST_GROUP)
         mreq = struct.pack('4sL', group, socket.INADDR_ANY)
         self.sock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
-
 
         while True:
             time.sleep(0.001)
@@ -78,10 +77,10 @@ class CameraReceiveThread(QThread):
             bytes_per_line = ch * w
             qt_image = QImage(rgb_image.data, w, h, bytes_per_line, QImage.Format_RGB888)
             self.change_pixmap_signal.emit(qt_image)
-
         self.sock.close()
-        #conn.close()
-#負責接收音訊的thread
+
+
+# 負責接收音訊的thread
 class AudioReceiveThread(QThread):
     def run(self):
         CHUNK = 1024
@@ -112,9 +111,11 @@ class AudioReceiveThread(QThread):
         stream.close()
         audio.terminate()
 
-#負責請求上線名單的thread
+
+# 負責請求上線名單的thread
 class RequestStudentListThread(QThread):
     change_student_list_signal = pyqtSignal(dict)
+
     def run(self):
         global CLASSROOM_INFO
         while True:
@@ -132,9 +133,11 @@ class RequestStudentListThread(QThread):
             print(student_list)
             self.change_student_list_signal.emit(student_list)
 
-#負責處理訊息接收的thread
+
+# 負責處理訊息接收的thread
 class RecvMsgThread(QThread):
     update_chatroom_signal = pyqtSignal(dict)
+
     def run(self):
         global CLASSROOM_INFO
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -151,10 +154,10 @@ class RecvMsgThread(QThread):
             data, _ = self.sock.recvfrom(BUFF_SIZE)
             data = pickle.loads(data)
             self.update_chatroom_signal.emit(data)
-
         self.sock.close()
 
-#透過輸入教室編號、學生姓名和學號來建立教室
+
+# 透過輸入教室編號、學生姓名和學號來加入教室
 class JoinRoomWindow(QWidget):
     def __init__(self):
         super().__init__()
@@ -172,40 +175,38 @@ class JoinRoomWindow(QWidget):
         self.student_name_label.setStyleSheet(JOIN_ROOM_STUDENT_NAME_LABEL_STYLE)
         self.student_name_input.setStyleSheet(JOIN_ROOM_STUDENT_NAME_INPUT_STYLE)
 
-
     def join_room(self):
-            global CLASSROOM_INFO, STUDENT_ID, STUDENT_NAME
-            room_number = self.room_number_input.toPlainText()
-            STUDENT_ID = self.student_id_input.toPlainText()
-            STUDENT_NAME = self.student_name_input.toPlainText()
+        global CLASSROOM_INFO, STUDENT_ID, STUDENT_NAME
+        room_number = self.room_number_input.toPlainText()
+        STUDENT_ID = self.student_id_input.toPlainText()
+        STUDENT_NAME = self.student_name_input.toPlainText()
 
-            request = {'action': 'join_room', 'room_num': room_number, 'student_name': STUDENT_NAME, 'student_id': STUDENT_ID}
-            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            sock.connect(SERVER_ADDRESS)
-            data = pickle.dumps(request)
-            sock.sendall(data)
-            recv_data = sock.recv(BUFF_SIZE)
-            sock.close()
+        request = {'action': 'join_room', 'room_num': room_number, 'student_name': STUDENT_NAME,
+                   'student_id': STUDENT_ID}
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.connect(SERVER_ADDRESS)
+        data = pickle.dumps(request)
+        sock.sendall(data)
+        recv_data = sock.recv(BUFF_SIZE)
+        sock.close()
 
-            CLASSROOM_INFO = pickle.loads(recv_data)
-            print(CLASSROOM_INFO)
+        CLASSROOM_INFO = pickle.loads(recv_data)
+        print(CLASSROOM_INFO)
 
-            if CLASSROOM_INFO.get('msg') == 'room not found':
-                #QMessageBox.warning(self, '查無此教室', '找不到此教室，請確認教室代碼是否有誤!')
-                msg_box = QMessageBox()
-                msg_box.setWindowTitle(f"查無此教室")
-                msg_box.setText('找不到此教室，請確認教室代碼是否有誤!')
-                msg_box.setStyleSheet(MSG_BOX_STYLE)
-                msg_box.exec_()
-            else:
-                self.close()
-                self.student_window = StudentWindow()
-                self.student_window.show()
-
-
+        if CLASSROOM_INFO.get('msg') == 'room not found':
+            #QMessageBox.warning(self, '查無此教室', '找不到此教室，請確認教室代碼是否有誤!')
+            msg_box = QMessageBox()
+            msg_box.setWindowTitle(f"查無此教室")
+            msg_box.setText('找不到此教室，請確認教室代碼是否有誤!')
+            msg_box.setStyleSheet(MSG_BOX_STYLE)
+            msg_box.exec_()
+        else:
+            self.close()
+            self.student_window = StudentWindow()
+            self.student_window.show()
 
 
-#控制UI畫面的顯示以及各元件的事件處理(傳送訊息、更新上線名單、更新聊天室內容等...)
+# 控制UI畫面的顯示以及各元件的事件處理(傳送訊息、更新上線名單、更新聊天室內容等...)
 class StudentWindow(QWidget):
     def __init__(self):
         super().__init__()
@@ -294,7 +295,7 @@ class StudentWindow(QWidget):
         data = pickle.dumps({
             'action': 'send_message',
             'room_num': CLASSROOM_INFO['room_num'],
-            'name':  STUDENT_NAME,
+            'name': STUDENT_NAME,
             'is_teacher': False,
             'time': time.localtime(),
             'msg': msg,
@@ -328,7 +329,6 @@ class StudentWindow(QWidget):
 
 if __name__ == "__main__":
     # check if room_num exist
-
 
     app = QApplication(sys.argv)
     join_room_window = JoinRoomWindow()

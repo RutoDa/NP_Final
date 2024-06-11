@@ -6,7 +6,8 @@ import threading
 import time
 import select
 
-#將老師傳送過來的影音群播給所有在教室中的學生
+
+# 將老師傳送過來的影音群播給所有在教室中的學生
 def classroom(classroom_info):
     global HOST, BUFF_SIZE, MULTICAST_GROUP, USED_PORT
     recv_sock = dict()
@@ -55,7 +56,6 @@ def classroom(classroom_info):
             USED_PORT.remove(classroom_info[f'{stream_type}_port'])
 
 
-
 HOST = '127.0.0.1'
 MULTICAST_GROUP = '224.1.1.1'
 PORT = 7777
@@ -65,8 +65,9 @@ CLASSROOMS = dict()
 threads = dict()
 USED_PORT = [7777]
 
-#負責老師建立教室和學生加入教室的功能
-#回應上線名單和文字傳遞
+
+# 負責老師建立教室和學生加入教室的功能
+# 回應上線名單和文字傳遞
 if __name__ == '__main__':
     # 開啟一個 TCP socket 用來監聽服務
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -77,7 +78,6 @@ if __name__ == '__main__':
     s.bind((HOST, PORT))
     # 等待client連入，等待區空間為5，超過時則拒絕
     s.listen(10)
-
 
     while True:
         conn, addr = s.accept()

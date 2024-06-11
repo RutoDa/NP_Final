@@ -22,7 +22,8 @@ MULTICAST_GROUP = '224.1.1.1'
 SERVER_ADDRESS = (SERVER_IP, 7777)
 CLASSROOM_INFO = dict()
 
-#負責傳遞螢幕畫面的thread
+
+# 負責傳遞螢幕畫面的thread
 class ScreenshotThread(QThread):
     def run(self):
         global CLASSROOM_INFO
@@ -42,7 +43,8 @@ class ScreenshotThread(QThread):
             self.sock.sendto(message, server_address)
         self.sock.close()
 
-#負責傳遞視訊鏡頭的thread
+
+# 負責傳遞視訊鏡頭的thread
 class CameraThread(QThread):
     def run(self):
         global CLASSROOM_INFO
@@ -61,7 +63,8 @@ class CameraThread(QThread):
             self.sock.sendto(message, server_address)
         self.sock.close()
 
-#負責傳遞音訊的thread
+
+# 負責傳遞音訊的thread
 class AudioThread(QThread):
     def run(self):
         global CLASSROOM_INFO
@@ -87,6 +90,7 @@ class AudioThread(QThread):
         audio.terminate()
         self.sock.close()
 
+
 #負責請求上線名單的thread
 class RequestStudentListThread(QThread):
     change_student_list_signal = pyqtSignal(dict)
@@ -110,7 +114,8 @@ class RequestStudentListThread(QThread):
             CLASSROOM_INFO['students'] = student_list
             self.change_student_list_signal.emit(student_list)
 
-#負責處理訊息接收的thread
+
+# 負責處理訊息接收的thread
 class RecvMsgThread(QThread):
     update_chatroom_signal = pyqtSignal(dict)
 
@@ -130,10 +135,10 @@ class RecvMsgThread(QThread):
             data, _ = self.sock.recvfrom(BUFF_SIZE)
             data = pickle.loads(data)
             self.update_chatroom_signal.emit(data)
-
         self.sock.close()
 
-#透過輸入老師名字以及課程名稱來建立教室
+
+# 透過輸入老師名字以及課程名稱來建立教室
 class CreateRoomWindow(QWidget):
     def __init__(self):
         super().__init__()
@@ -167,7 +172,8 @@ class CreateRoomWindow(QWidget):
         self.teacher_window = TeacherWindow()
         self.teacher_window.show()
 
-#控制UI畫面的顯示以及各元件的事件處理(傳送訊息、更新上線名單、更新聊天室內容等...)
+
+# 控制UI畫面的顯示以及各元件的事件處理(傳送訊息、更新上線名單、更新聊天室內容等...)
 class TeacherWindow(QWidget):
     def __init__(self):
         super().__init__()
@@ -210,10 +216,6 @@ class TeacherWindow(QWidget):
         self.camera.setStyleSheet(CAMERA_STYLE)
         self.screenshot.setStyleSheet(SCREENSHOT_STYLE)
         self.student_list.setStyleSheet(STUDENT_LIST_STYLE)
-
-
-
-
 
     def closeEvent(self, event):
         self.screenshot_thread.terminate()
@@ -272,5 +274,3 @@ if __name__ == "__main__":
     create_room_window.show()
 
     sys.exit(app.exec_())
-
-
