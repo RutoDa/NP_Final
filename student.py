@@ -9,7 +9,7 @@ import pyaudio
 from PyQt5.QtWidgets import QApplication, QWidget, QMessageBox
 from PyQt5.QtCore import QThread, pyqtSignal
 from PyQt5.QtGui import QImage, QPixmap
-from PyQt5 import uic
+from PyQt5 import uic, QtGui
 import time
 from ui.Style import *
 
@@ -159,7 +159,8 @@ class JoinRoomWindow(QWidget):
     def __init__(self):
         super().__init__()
         uic.loadUi('ui/join_room.ui', self)
-        self.setWindowTitle("加入教室")
+        self.setWindowIcon(QtGui.QIcon('img/video-conference-gray.png'))
+        self.setWindowTitle("線上同步教室(加入教室)")
         self.join_room_button.clicked.connect(self.join_room)
         self.setStyleSheet(JOIN_ROOM_WIDGET_STYLE)
         self.join_room_button.setStyleSheet(JOIN_ROOM_BUTTON_STYLE)
@@ -190,7 +191,12 @@ class JoinRoomWindow(QWidget):
             print(CLASSROOM_INFO)
 
             if CLASSROOM_INFO.get('msg') == 'room not found':
-                QMessageBox.warning(self, '查無此教室', '找不到此教室，請確認教室代碼是否有誤!')
+                #QMessageBox.warning(self, '查無此教室', '找不到此教室，請確認教室代碼是否有誤!')
+                msg_box = QMessageBox()
+                msg_box.setWindowTitle(f"查無此教室")
+                msg_box.setText('找不到此教室，請確認教室代碼是否有誤!')
+                msg_box.setStyleSheet(MSG_BOX_STYLE)
+                msg_box.exec_()
             else:
                 self.close()
                 self.student_window = StudentWindow()
@@ -204,7 +210,8 @@ class StudentWindow(QWidget):
     def __init__(self):
         super().__init__()
         uic.loadUi('ui/classroom.ui', self)
-        self.setWindowTitle("教室(學生端)")
+        self.setWindowIcon(QtGui.QIcon('img/video-conference-gray.png'))
+        self.setWindowTitle("線上同步教室(學生端)")
         self.quit_button.clicked.connect(self.close)
         self.screenshot_receive_thread = ScreenshotReceiveThread()
         self.screenshot_receive_thread.change_pixmap_signal.connect(self.update_screenshot_image)

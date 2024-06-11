@@ -10,7 +10,7 @@ import pickle
 import sys
 from PyQt5.QtWidgets import QApplication, QMessageBox
 from PyQt5.QtCore import QThread, pyqtSignal
-from PyQt5 import uic
+from PyQt5 import uic, QtGui
 import time
 from PyQt5.QtWidgets import QWidget
 
@@ -138,7 +138,8 @@ class CreateRoomWindow(QWidget):
     def __init__(self):
         super().__init__()
         uic.loadUi('ui/create_room.ui', self)
-        self.setWindowTitle("建立教室")
+        self.setWindowIcon(QtGui.QIcon('img/video-conference-gray.png'))
+        self.setWindowTitle("線上同步教室(建立教室)")
         self.create_room_button.clicked.connect(self.create_room)
         self.setStyleSheet(CREATE_ROOM_WIDGET_STYLE)
         self.create_room_button.setStyleSheet(CREATE_ROOM_BUTTON_STYLE)
@@ -171,7 +172,8 @@ class TeacherWindow(QWidget):
     def __init__(self):
         super().__init__()
         uic.loadUi('ui/classroom.ui', self)
-        self.setWindowTitle("教室(老師端)")
+        self.setWindowIcon(QtGui.QIcon('img/video-conference-gray.png'))
+        self.setWindowTitle("線上同步教室(老師端)")
         self.quit_button.clicked.connect(self.close)
         self.screenshot_thread = ScreenshotThread()
         self.screenshot_thread.start()

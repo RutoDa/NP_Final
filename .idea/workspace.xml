@@ -5,20 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9973b959-ac10-4019-8a09-70d23b1b3ff3" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/NP_Final.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Server.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/student.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/teacher.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ui/Style.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ui/classroom.ui" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ui/create_room.ui" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ui/join_room.ui" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Student.py" beforeDir="false" afterPath="$PROJECT_DIR$/Student.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Teacher.py" beforeDir="false" afterPath="$PROJECT_DIR$/Teacher.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -88,7 +77,7 @@
       <option name="presentableId" value="Default" />
       <updated>1717426454003</updated>
       <workItem from="1717426463250" duration="44000" />
-      <workItem from="1717426524903" duration="79462000" />
+      <workItem from="1717426524903" duration="80005000" />
     </task>
     <servers />
   </component>
