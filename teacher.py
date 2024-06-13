@@ -91,7 +91,7 @@ class AudioThread(QThread):
         self.sock.close()
 
 
-#負責請求上線名單的thread
+# 負責請求上線名單的thread
 class RequestStudentListThread(QThread):
     change_student_list_signal = pyqtSignal(dict)
 
