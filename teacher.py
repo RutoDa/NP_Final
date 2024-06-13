@@ -68,7 +68,7 @@ class CameraThread(QThread):
 class AudioThread(QThread):
     def run(self):
         global CLASSROOM_INFO
-        # PyAudio参数
+        # PyAudio 參數
         CHUNK = 1024
         FORMAT = pyaudio.paInt16
         CHANNELS = 1
